@@ -2,12 +2,12 @@ import json
 import os
 
 
-ZONE_FILE = "config/zone.json"
+ZONE_FILE = "backend/config/zone.json"
 
 
 def save_zone(zone_type, lines=None, polygon=None):
 
-    os.makedirs("config", exist_ok=True)
+    os.makedirs("backend/config", exist_ok=True)
 
     data = {
         "type": zone_type,

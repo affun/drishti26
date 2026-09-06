@@ -3,7 +3,7 @@ import time
 import threading
 from datetime import datetime
 
-from state import STATE
+from backend.state import STATE
 
 
 class AlertManager:

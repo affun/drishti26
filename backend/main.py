@@ -5,8 +5,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 
-from detector import DrishtiDetector
-from state import STATE
+from backend.detector import DrishtiDetector
+from backend.state import STATE
 
 app = FastAPI(
     title="DRISHTI API",

@@ -6,22 +6,22 @@ from datetime import datetime
 
 from ultralytics import YOLO
 
-from state import STATE
-from stream import CameraStream
-from zone import draw_zone
-from zone_manager import crossed_any_line
-from alert_manager import trigger_alert
+from backend.state import STATE
+from backend.stream import CameraStream
+from backend.zone import draw_zone
+from backend.zone_manager import crossed_any_line
+from backend.alert_manager import trigger_alert
 
 
 class DrishtiDetector:
 
     def __init__(self):
         self.stream = None
-        self.model = YOLO("yolo11n.pt")
+        self.model = YOLO("backend/models/yolo11n.pt")
         self.thread = None
         self._stop_flag = False
 
-        os.makedirs("evidence", exist_ok=True)
+        os.makedirs("backend/data/evidence", exist_ok=True)
 
     # --------------------------------------------------
     # START
@@ -232,7 +232,7 @@ class DrishtiDetector:
 
                         elif zone_type == "polygon" and len(polygon_points) >= 3:
 
-                            from zone import point_inside_zone
+                            from backend.zone import point_inside_zone
                             intrusion = point_inside_zone(
                                 (center_x, center_y),
                                 polygon_points
@@ -343,7 +343,7 @@ class DrishtiDetector:
             "%Y%m%d_%H%M%S_%f"
         )[:-3]
 
-        filename = f"evidence/alert_{timestamp}_id{track_id}.jpg"
+        filename = f"backend/data/evidence/alert_{timestamp}_id{track_id}.jpg"
 
         cv2.imwrite(filename, frame)
 

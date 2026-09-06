@@ -7,9 +7,9 @@ import os
 
 from streamlit_drawable_canvas import st_canvas
 
-from detector import DrishtiDetector
-from state import STATE
-from zone_manager import save_zone, load_zone
+from backend.detector import DrishtiDetector
+from backend.state import STATE
+from backend.zone_manager import save_zone, load_zone
 
 
 # ==================================================
