@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# Runtime/generated files
+logs/
+evidence/
+alerts/
+
+# Large demo video
+test.mp4
+
+# Environment/secrets
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
