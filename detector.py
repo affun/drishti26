@@ -121,6 +121,9 @@ class DrishtiDetector:
                 current_fps = fps_counter
                 fps_counter = 0
                 last_fps_time = now
+            
+                with STATE.lock:
+                    STATE.fps = current_fps
 
             # Process every 3rd frame for performance
             process_this_frame = (frame_count % 3 == 0)

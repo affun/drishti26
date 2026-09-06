@@ -42,7 +42,7 @@ def get_status():
                 else "secure"
             ),
             "active_alerts": STATE.alert_count,
-            "fps": 0,
+            "fps": STATE.fps,
         }
 
 @app.post("/api/surveillance/start")

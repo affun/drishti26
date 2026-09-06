@@ -30,6 +30,7 @@ class SharedState:
 
         self.people_detected = 0
         self.people_in_zone = 0
+        self.fps = 0
 
         # -----------------------------
         # ALERTS
