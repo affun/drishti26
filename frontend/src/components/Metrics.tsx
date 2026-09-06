@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import {
   Users,
   ShieldCheck,
@@ -19,59 +18,36 @@ type Status = {
   fps: number;
 };
 
-export default function Metrics() {
-  const [status, setStatus] = useState<Status | null>(null);
+type MetricsProps = {
+  status: Status;
+};
 
-  useEffect(() => {
-    const fetchStatus = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:8000/api/status"
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch status");
-        }
-
-        const data = await response.json();
-        setStatus(data);
-      } catch (error) {
-        console.error("Backend connection failed:", error);
-      }
-    };
-
-    fetchStatus();
-
-    const interval = setInterval(fetchStatus, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
+export default function Metrics({ status }: MetricsProps) {
   const metrics = [
     {
       label: "People Detected",
-      value: status?.people_detected ?? 0,
+      value: status.people_detected,
       icon: Users,
       status: "Live detection",
     },
     {
       label: "Zone Status",
-      value: status?.zone_status?.toUpperCase() ?? "SECURE",
+      value: status.zone_status.toUpperCase(),
       icon: ShieldCheck,
       status:
-        status?.people_in_zone && status.people_in_zone > 0
+        status.people_in_zone > 0
           ? `${status.people_in_zone} person in zone`
           : "No intrusion detected",
     },
     {
       label: "Active Alerts",
-      value: status?.active_alerts ?? 0,
+      value: status.active_alerts,
       icon: AlertTriangle,
       status: "Current alerts",
     },
     {
       label: "System FPS",
-      value: status?.fps ?? 0,
+      value: status.fps,
       icon: Activity,
       status: "AI processing",
     },
