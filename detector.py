@@ -37,6 +37,7 @@ class DrishtiDetector:
 
         with STATE.lock:
             STATE.running = True
+            STATE.camera_source = source
             STATE.camera_status = "CONNECTING..."
             STATE.people_detected = 0
             STATE.people_in_zone = 0

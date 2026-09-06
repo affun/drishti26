@@ -1,11 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from detector import DrishtiDetector
 from state import STATE
 
 app = FastAPI(
     title="DRISHTI API",
     version="1.0.0",
 )
+
+detector = DrishtiDetector()
 
 # Allow the Next.js development server to communicate with FastAPI
 app.add_middleware(
@@ -36,3 +39,22 @@ def get_status():
             "active_alerts": STATE.alert_count,
             "fps": 0,
         }
+
+@app.post("/api/surveillance/start")
+def start_surveillance(source: str = "test.mp4"):
+    detector.start(source)
+
+    return {
+        "success": True,
+        "message": "Surveillance started",
+        "source": source,
+    }
+
+@app.post("/api/surveillance/stop")
+def stop_surveillance():
+    detector.stop()
+
+    return {
+        "success": True,
+        "message": "Surveillance stopped",
+    }
