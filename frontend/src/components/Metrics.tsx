@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import {
   Users,
   ShieldCheck,
@@ -5,34 +8,75 @@ import {
   Activity,
 } from "lucide-react";
 
-const metrics = [
-  {
-    label: "People Detected",
-    value: "0",
-    icon: Users,
-    status: "Live detection",
-  },
-  {
-    label: "Zone Status",
-    value: "SECURE",
-    icon: ShieldCheck,
-    status: "No intrusion detected",
-  },
-  {
-    label: "Active Alerts",
-    value: "0",
-    icon: AlertTriangle,
-    status: "All clear",
-  },
-  {
-    label: "System FPS",
-    value: "0",
-    icon: Activity,
-    status: "AI processing",
-  },
-];
+type Status = {
+  running: boolean;
+  camera: string | null;
+  camera_status: string;
+  people_detected: number;
+  people_in_zone: number;
+  zone_status: string;
+  active_alerts: number;
+  fps: number;
+};
 
 export default function Metrics() {
+  const [status, setStatus] = useState<Status | null>(null);
+
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:8000/api/status"
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch status");
+        }
+
+        const data = await response.json();
+        setStatus(data);
+      } catch (error) {
+        console.error("Backend connection failed:", error);
+      }
+    };
+
+    fetchStatus();
+
+    const interval = setInterval(fetchStatus, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const metrics = [
+    {
+      label: "People Detected",
+      value: status?.people_detected ?? 0,
+      icon: Users,
+      status: "Live detection",
+    },
+    {
+      label: "Zone Status",
+      value: status?.zone_status?.toUpperCase() ?? "SECURE",
+      icon: ShieldCheck,
+      status:
+        status?.people_in_zone && status.people_in_zone > 0
+          ? `${status.people_in_zone} person in zone`
+          : "No intrusion detected",
+    },
+    {
+      label: "Active Alerts",
+      value: status?.active_alerts ?? 0,
+      icon: AlertTriangle,
+      status: "Current alerts",
+    },
+    {
+      label: "System FPS",
+      value: status?.fps ?? 0,
+      icon: Activity,
+      status: "AI processing",
+    },
+  ];
+
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
       {metrics.map((metric) => {

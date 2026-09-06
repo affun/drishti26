@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from state import STATE
 
 app = FastAPI(
     title="DRISHTI API",
@@ -20,14 +21,18 @@ app.add_middleware(
 
 @app.get("/api/status")
 def get_status():
-    return {
-        "running": False,
-        "camera": "CAM-01",
-        "camera_status": "offline",
-        "people_detected": 0,
-        "zone_status": "secure",
-        "active_alerts": 0,
-        "fps": 0,
-    }
-
-
+    with STATE.lock:
+        return {
+            "running": STATE.running,
+            "camera": STATE.camera_source,
+            "camera_status": STATE.camera_status,
+            "people_detected": STATE.people_detected,
+            "people_in_zone": STATE.people_in_zone,
+            "zone_status": (
+                "alert"
+                if STATE.people_in_zone > 0
+                else "secure"
+            ),
+            "active_alerts": STATE.alert_count,
+            "fps": 0,
+        }
