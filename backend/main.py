@@ -1,5 +1,10 @@
+import asyncio
+
+import cv2
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
+
 from detector import DrishtiDetector
 from state import STATE
 
@@ -58,3 +63,33 @@ def stop_surveillance():
         "success": True,
         "message": "Surveillance stopped",
     }
+
+def generate_frames():
+    while True:
+        with STATE.lock:
+            frame = STATE.frame
+
+        if frame is None:
+            continue
+
+        success, buffer = cv2.imencode(".jpg", frame)
+
+        if not success:
+            continue
+
+        frame_bytes = buffer.tobytes()
+
+        yield (
+            b"--frame\r\n"
+            b"Content-Type: image/jpeg\r\n\r\n"
+            + frame_bytes
+            + b"\r\n"
+        )
+
+
+@app.get("/api/video")
+def video_feed():
+    return StreamingResponse(
+        generate_frames(),
+        media_type="multipart/x-mixed-replace; boundary=frame",
+    )

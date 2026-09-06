@@ -34,36 +34,19 @@ export default function CameraFeed() {
       </div>
 
       {/* Video area */}
-      <div className="relative aspect-video bg-black/30">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <Camera
-              size={44}
-              strokeWidth={1.4}
-              className="mx-auto mb-3 text-[var(--muted)]"
-            />
+      <div className="relative aspect-video overflow-hidden bg-black">
+        <img
+          src="http://localhost:8000/api/video"
+          alt="Live surveillance feed"
+          className="h-full w-full object-contain"
+        />
 
-            <p className="text-sm text-[var(--secondary)]">
-              Camera feed will appear here
-            </p>
-
-            <p className="mt-1 text-xs text-[var(--muted)]">
-              Waiting for surveillance stream
-            </p>
-          </div>
-        </div>
-
-        {/* Camera overlay */}
+        {/* Recording indicator */}
         <div className="absolute left-4 top-4 flex items-center gap-2 rounded-md border border-[var(--border)] bg-black/40 px-2.5 py-1.5 backdrop-blur-md">
           <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--danger)]" />
           <span className="text-[10px] font-medium tracking-wider text-white">
             REC
           </span>
-        </div>
-
-        {/* Timestamp placeholder */}
-        <div className="absolute bottom-4 right-4 rounded-md bg-black/40 px-2.5 py-1.5 font-mono text-[10px] text-white/70 backdrop-blur-md">
-          00:00:00
         </div>
       </div>
     </div>
